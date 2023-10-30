@@ -51,7 +51,7 @@ sample_data = [
     {"arr": [2, 4], "k": 0},
 ]
 
-# sample_data = sample_data * 1000000
+sample_data = sample_data * 1000000
 
 
 class PairDifferenceData(TypedDict):
@@ -62,19 +62,25 @@ class PairDifferenceData(TypedDict):
 # @profile
 def find_pairs(data: PairDifferenceData) -> List[tuple[int, int]]:
     arr, k = data["arr"], data["k"]
-    num_set = set(arr)
+    arr.sort()
     pair_set = set()
 
-    for n in arr:
-        lookup_value = n + k
-        if k == 0:
-            if arr.count(n) > 1:
-                pair_set.add((n, n))
-        elif lookup_value in num_set:
-            pair_set.add(tuple([n, lookup_value]))
+    i, j = 0, 1
+    arr_len = len(arr)
+
+    while i < arr_len and j < arr_len:
+        diff = arr[j] - arr[i]
+
+        if diff < k or i == j:
+            j += 1
+        elif diff > k:
+            i += 1
+        else:
+            pair_set.add((arr[j], arr[i]))
+            i += 1
+            j += 1
 
     result = list(pair_set)
-    print(result)
     return result
 
 
